@@ -12,12 +12,46 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "custom-activitybar",
+          "title": "Cookbook.dev",
+          "icon": "logo.svg"
+        }
+      ]
+    },
+    "views": {
+      "custom-activitybar": [
+        {
+          "type": "webview",
+          "id": "cookbook.contracts",
+          "name": "Contracts",
+          "contextualTitle": "Contracts"
+        }
+      ]
+    },
     "commands": [
       {
-        "command": "vscode-cookbook.helloWorld",
-        "title": "Hello World"
+        "command": "cookbook.contracts",
+        "title": "Sidebar View"
+      },
+      {
+        "command": "cookbook.menu.view",
+        "category": "vscode-extension-sidebar-html",
+        "title": "Sample WebView in VS Code Sidebar",
+        "icon": "$(clear-all)"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "cookbook.menu.view",
+          "group": "navigation",
+          "when": "view == cookbook.contracts"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
