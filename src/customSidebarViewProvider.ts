@@ -24,23 +24,12 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
 
 
   private getHtmlContent(webview: vscode.Webview): string {
-    console.log("1");
 
-    const manifestUri = vscode.Uri.joinPath(
-      this._extensionUri,
-      "build",
-      "asset-manifest.json"
-    )
-
-    console.log("2", manifestUri)
-
-    try {
-      const manifest = require("../build/asset-manifest.json");
-      console.log("3", manifest);
-
-    } catch (error) {
-      console.log(error)
-    }
+    // const manifestUri = vscode.Uri.joinPath(
+    //   this._extensionUri,
+    //   "build",
+    //   "asset-manifest.json"
+    // )
 
     // relative path might cause issues in production. Absolute path caused issues during dev 
     // maybe windows specific?
@@ -49,42 +38,18 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
 
     const mainScript = manifest.files["main.js"];
     const mainStyle = manifest.files["main.css"];
-    console.log("4", mainScript, mainStyle)
     const scriptPathOnDisk = vscode.Uri.joinPath(
       this._extensionUri, "build", mainScript
     );
-    const scriptUri = scriptPathOnDisk.with({ scheme: "vscode-resource" });
+    const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
     const stylePathOnDisk = vscode.Uri.joinPath(
       this._extensionUri, "build", mainStyle
     );
-    const styleUri = stylePathOnDisk.with({ scheme: "vscode-resource" });
+    const styleUri = webview.asWebviewUri(stylePathOnDisk);
 
-    console.log("made it here", scriptUri, styleUri)
     // Use a nonce to whitelist which scripts can be run
     const nonce = getNonce();
 
-
-    console.log(`<!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-      <meta name="theme-color" content="#000000">
-      <title>React App</title>
-      <link rel="stylesheet" type="text/css" href="${styleUri}">
-      <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src vscode-resource: https:; script-src 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
-      <base href="${vscode.Uri.joinPath(this._extensionUri, "build", "index.html").with({
-      scheme: "vscode-resource"
-    })}/">
-    </head>
-
-    <body>
-      <noscript>You need to enable JavaScript to run this app.</noscript>
-      <div id="root"></div>
-      
-      <script nonce="${nonce}" src="${scriptUri}"></script>
-    </body>
-    </html>`)
     return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
@@ -93,11 +58,8 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
 				<meta name="theme-color" content="#000000">
 				<title>React App</title>
 				<link rel="stylesheet" type="text/css" href="${styleUri}">
-				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src vscode-resource: https:; script-src 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
-				<base href="${vscode.Uri.joinPath(this._extensionUri, "build", "index.html").with({
-      scheme: "vscode-resource"
-    })}/">
-			</head>
+        <base href="${webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "build", "index.html"))}/">
+        </head>
 
 			<body>
 				<noscript>You need to enable JavaScript to run this app.</noscript>
