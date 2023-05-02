@@ -3,5 +3,6 @@ body {
   padding: 0;
   font-family: var(--vscode-editor-font-family) !important;
   background-color: var(--vscode-input-background) !important;
+  font-size: small;
   height: 100vh;
 }

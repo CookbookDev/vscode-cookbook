@@ -61,7 +61,8 @@
   "scripts": {
     "vscode:prepublish": "yarn run compile && react-scripts build",
     "compile": "tsc -p tsconfig.extension.json",
-    "build": "tsc -p tsconfig.react.json",
+    "build": "react-scripts build",
+    "start": "react-scripts start",
     "watch": "tsc -watch -p tsconfig.extension.json",
     "pretest": "yarn run compile && yarn run lint",
     "lint": "eslint src --ext ts",
@@ -83,6 +84,8 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "axios": "^1.4.0",
+    "bootstrap": "^5.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
