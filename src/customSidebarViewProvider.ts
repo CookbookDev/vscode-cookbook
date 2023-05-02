@@ -22,57 +22,89 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
     webviewView.webview.html = this.getHtmlContent(webviewView.webview);
   }
 
+
   private getHtmlContent(webview: vscode.Webview): string {
-    // Get the local path to main script run in the webview,
-    // then convert it to a uri we can use in the webview.
-    const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "assets", "main.js")
-    );
+    console.log("1");
 
-    const styleResetUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "assets", "reset.css")
-    );
-    const styleVSCodeUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "assets", "vscode.css")
-    );
+    const manifestUri = vscode.Uri.joinPath(
+      this._extensionUri,
+      "build",
+      "asset-manifest.json"
+    )
 
-    // Same for stylesheet
-    const stylesheetUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "assets", "main.css")
-    );
+    console.log("2", manifestUri)
 
-    // Use a nonce to only allow a specific script to be run.
+    try {
+      const manifest = require("../build/asset-manifest.json");
+      console.log("3", manifest);
+
+    } catch (error) {
+      console.log(error)
+    }
+
+    // relative path might cause issues in production. Absolute path caused issues during dev 
+    // maybe windows specific?
+
+    const manifest = require("../build/asset-manifest.json");
+
+    const mainScript = manifest.files["main.js"];
+    const mainStyle = manifest.files["main.css"];
+    console.log("4", mainScript, mainStyle)
+    const scriptPathOnDisk = vscode.Uri.joinPath(
+      this._extensionUri, "build", mainScript
+    );
+    const scriptUri = scriptPathOnDisk.with({ scheme: "vscode-resource" });
+    const stylePathOnDisk = vscode.Uri.joinPath(
+      this._extensionUri, "build", mainStyle
+    );
+    const styleUri = stylePathOnDisk.with({ scheme: "vscode-resource" });
+
+    console.log("made it here", scriptUri, styleUri)
+    // Use a nonce to whitelist which scripts can be run
     const nonce = getNonce();
 
+
+    console.log(`<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+      <meta name="theme-color" content="#000000">
+      <title>React App</title>
+      <link rel="stylesheet" type="text/css" href="${styleUri}">
+      <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src vscode-resource: https:; script-src 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
+      <base href="${vscode.Uri.joinPath(this._extensionUri, "build", "index.html").with({
+      scheme: "vscode-resource"
+    })}/">
+    </head>
+
+    <body>
+      <noscript>You need to enable JavaScript to run this app.</noscript>
+      <div id="root"></div>
+      
+      <script nonce="${nonce}" src="${scriptUri}"></script>
+    </body>
+    </html>`)
     return `<!DOCTYPE html>
 			<html lang="en">
 			<head>
-				<meta charset="UTF-8">
-				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
-				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://unpkg.com/modern-css-reset/dist/reset.min.css" />
-        <link href="https://fonts.googleapis.com/css2?family=Muli:wght@300;400;700&display=swap" rel="stylesheet">
-        
-				<link href="${styleResetUri}" rel="stylesheet">
-				<link href="${styleVSCodeUri}" rel="stylesheet">
-        <link href="${stylesheetUri}" rel="stylesheet">
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+				<meta name="theme-color" content="#000000">
+				<title>React App</title>
+				<link rel="stylesheet" type="text/css" href="${styleUri}">
+				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src vscode-resource: https:; script-src 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
+				<base href="${vscode.Uri.joinPath(this._extensionUri, "build", "index.html").with({
+      scheme: "vscode-resource"
+    })}/">
 			</head>
+
 			<body>
-			<section class="wrapper">
-      <div class="container">
-            <div class="content">
-                <h2 class="subtitle">Subscribe today</h2>
-                <input type="text" class="mail" placeholder="Your email address" name="mail" required>
-                
-                <button class="add-color-button">Subscribe</button>
-                
-                <p class="text">Unsubscribe at any time.</p>
-                
-            </div>
-      </div>
-			</section>
-			<!--<script nonce="${nonce}" src="${scriptUri}"></script>-->
-      </body>
+				<noscript>You need to enable JavaScript to run this app.</noscript>
+				<div id="root"></div>
+				
+				<script nonce="${nonce}" src="${scriptUri}"></script>
+			</body>
 			</html>`;
   }
 }
