@@ -54,7 +54,7 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "yarn run compile",
+    "vscode:prepublish": "yarn run compile && react-scripts build",
     "compile": "tsc -p tsconfig.extension.json",
     "build": "tsc -p tsconfig.react.json",
     "watch": "tsc -watch -p tsconfig.extension.json",
