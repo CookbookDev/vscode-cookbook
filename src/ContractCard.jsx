@@ -54,7 +54,7 @@ export const ContractCard = ({ contract }) => {
             href={`https://www.cookbook.dev/contracts/${contract.address}?utm=vscode`}
             target="_blank"
             rel="noreferrer noopener"
-            style={{ fontSize: "small" }}
+            style={{ fontSize: "small", color: "white" }}
           >
             View Docs and Stats
           </a>
@@ -81,13 +81,14 @@ const Truncate = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: white;
 `;
 
 const Card = styled.div`
   transition: all 0.1s linear;
   cursor: pointer;
-  background-color: #444444;
+  background-color: var(--vscode-input-background);
   &:hover {
-    background-color: #222222;
+    background-color: var(--vscode-button-hoverBackground);
   }
 `;

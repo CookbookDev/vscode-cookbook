@@ -60,7 +60,7 @@ export default function App() {
           />
           <div
             style={{
-              fontSize: "20px",
+              fontSize: "28px",
               fontWeight: "bold",
               width: "100%",
               alignSelf: "flex-end",
@@ -75,7 +75,7 @@ export default function App() {
           rel="noreferrer noopener"
           style={{ display: "flex", gap: "5px", marginTop: "20px", marginBottom: "10px" }}
         >
-          <img src={Discord} width={20} height={15} />
+          <img src={Discord} width={16} height={12} />
         </a>
       </div>
 

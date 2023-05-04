@@ -2,7 +2,8 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--vscode-editor-font-family) !important;
-  background-color: var(--vscode-input-background) !important;
+  background-color: transparent;
+  color: var(--color-foreground);
   font-size: small;
   height: 100vh;
 }
