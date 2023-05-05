@@ -3,7 +3,7 @@ import * as vscode from "vscode";
 export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "cookbook.contracts";
 
-  private _view?: vscode.WebviewView;
+  public _view?: vscode.WebviewView;
 
   constructor(private readonly _extensionUri: vscode.Uri) { }
 
@@ -20,20 +20,23 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._extensionUri],
     };
     webviewView.webview.html = this.getHtmlContent(webviewView.webview);
+    webviewView.webview.onDidReceiveMessage(
+      message => {
+        switch (message.command) {
+          case 'open':
+            vscode.window.showErrorMessage(message.text);
+            vscode.commands.executeCommand('cookbook.open', message.data);
+            return;
+          case 'alert':
+            vscode.window.showErrorMessage(message.text);
+            return;
+        }
+      },
+    );
   }
 
 
   private getHtmlContent(webview: vscode.Webview): string {
-
-    // const manifestUri = vscode.Uri.joinPath(
-    //   this._extensionUri,
-    //   "build",
-    //   "asset-manifest.json"
-    // )
-
-    // relative path might cause issues in production. Absolute path caused issues during dev 
-    // maybe windows specific?
-
     const manifest = require("../build/asset-manifest.json");
 
     const mainScript = manifest.files["main.js"];

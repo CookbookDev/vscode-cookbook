@@ -5,6 +5,7 @@ import { CustomSidebarViewProvider } from './customSidebarViewProvider';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+	let terminal: vscode.Terminal | undefined = vscode.window.createTerminal("Cookbook.dev");
 
 	// Console diagnostic information (console.log) and errors (console.error)
 	// Will only be executed once when your extension is activated
@@ -18,6 +19,24 @@ export function activate(context: vscode.ExtensionContext) {
 			provider
 		)
 	);
+
+	context.subscriptions.push(
+		vscode.window.onDidCloseTerminal((closedTerminal) => {
+			if (terminal === closedTerminal) {
+				terminal = undefined;
+			}
+		})
+	);
+
+	context.subscriptions.push(vscode.commands.registerCommand('cookbook.open', (address) => {
+		vscode.window.showInformationMessage('Cookbook.dev: downloading ' + address);
+		if (!terminal) {
+			terminal = vscode.window.createTerminal("Cookbook.dev");
+		}
+		terminal.show();
+		terminal.sendText(`npx cookbookdev install ${address}`);
+	}));
+
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand("cookbook.menu.view", () => {

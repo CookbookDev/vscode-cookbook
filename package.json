@@ -42,6 +42,10 @@
         "title": "Sidebar View"
       },
       {
+        "command": "cookbook.open",
+        "title": "Cookbook Contract Opener"
+      },
+      {
         "command": "cookbook.menu.view",
         "category": "vscode-extension-sidebar-html",
         "title": "Sample WebView in VS Code Sidebar",

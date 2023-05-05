@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Badge from "./green-badge-icon.png";
 
+const vscode = acquireVsCodeApi();
+
 export const ContractCard = ({ contract }) => {
   const [opening, setOpening] = useState(false);
 
@@ -12,6 +14,10 @@ export const ContractCard = ({ contract }) => {
           style={{ marginBottom: "20px" }}
           onClick={() => {
             setOpening(true);
+            vscode.postMessage({
+              command: "open",
+              data: contract.address,
+            });
           }}
         >
           <h6
