@@ -1,7 +1,7 @@
 <p align="center">
 <br />
 <a href="https://www.cookbook.dev">
-  <img src="/public/logo192.png" width="150" alt=""  />
+  <img src="/public/logo.png" width="150" alt=""  />
 </a>
 <br />
 </p>
