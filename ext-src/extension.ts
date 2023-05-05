@@ -1,11 +1,18 @@
 // The module 'vscode' contains the VS Code extensibility API
 import * as vscode from 'vscode';
 import { CustomSidebarViewProvider } from './customSidebarViewProvider';
+import { getFilename } from './utils';
+
+let terminal: vscode.Terminal | undefined;
+let fsWatcher: vscode.FileSystemWatcher | undefined;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	let terminal: vscode.Terminal | undefined = vscode.window.createTerminal("Cookbook.dev");
+	if (!fsWatcher) {
+		fsWatcher = vscode.workspace.createFileSystemWatcher("**/*");
+	}
+	if (!terminal) { terminal = vscode.window.createTerminal("Cookbook.dev"); }
 	terminal.sendText(`npm install cookbookdev@latest -g`);
 
 	// Console diagnostic information (console.log) and errors (console.error)
@@ -29,7 +36,21 @@ export function activate(context: vscode.ExtensionContext) {
 		})
 	);
 
-	context.subscriptions.push(vscode.commands.registerCommand('cookbook.open', (address) => {
+	context.subscriptions.push(vscode.commands.registerCommand('cookbook.open', (address, mainContract) => {
+		if (!vscode.workspace.workspaceFolders) {
+			vscode.window.showErrorMessage("Cookbook.dev: Please open a workspace (folder) first.");
+			return;
+		}
+		const listener = fsWatcher!.onDidCreate((uri) => {
+			const filename = getFilename(uri.fsPath);
+			console.log("james", filename);
+			if (filename === "simple-token.sol") {
+				console.log("found it")
+				vscode.window.showTextDocument(uri);
+				listener.dispose();
+			}
+		});
+		console.log(vscode.workspace.workspaceFolders[0].uri.fsPath);
 		vscode.window.showInformationMessage('Cookbook.dev: downloading ' + address);
 		if (!terminal) {
 			terminal = vscode.window.createTerminal("Cookbook.dev");
@@ -58,4 +79,13 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() {
+	if (fsWatcher) {
+		fsWatcher.dispose();
+		fsWatcher = undefined;
+	}
+	if (terminal) {
+		terminal.dispose();
+		terminal = undefined;
+	}
+}
