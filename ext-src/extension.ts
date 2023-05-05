@@ -44,7 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
 				listener.dispose();
 			}
 		});
-		vscode.window.showInformationMessage('Cookbook.dev: downloading ' + address);
+		vscode.window.showInformationMessage('Cookbook.dev: opening ' + address);
 		if (!terminal) {
 			terminal = vscode.window.createTerminal("Cookbook.dev");
 		}

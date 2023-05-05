@@ -18,6 +18,9 @@ export const ContractCard = ({ contract }) => {
               command: "open",
               data: { address: contract.address, mainFile: contract.mainFile },
             });
+            setTimeout(() => {
+              setOpening(false);
+            }, 2000);
           }}
         >
           <h6
