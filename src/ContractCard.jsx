@@ -16,7 +16,7 @@ export const ContractCard = ({ contract }) => {
             setOpening(true);
             vscode.postMessage({
               command: "open",
-              data: contract.address,
+              data: { address: contract.address, mainFile: contract.mainFile },
             });
           }}
         >

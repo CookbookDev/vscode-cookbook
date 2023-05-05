@@ -15,10 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 	if (!terminal) { terminal = vscode.window.createTerminal("Cookbook.dev"); }
 	terminal.sendText(`npm install cookbookdev@latest -g`);
 
-	// Console diagnostic information (console.log) and errors (console.error)
-	// Will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "vscode-extension-sidebar-html" is active!');
-
+	// TODO: Assuming this needs to be disposed of when the extension is deactivated
 	const provider = new CustomSidebarViewProvider(context.extensionUri);
 
 	context.subscriptions.push(
@@ -36,21 +33,17 @@ export function activate(context: vscode.ExtensionContext) {
 		})
 	);
 
-	context.subscriptions.push(vscode.commands.registerCommand('cookbook.open', (address, mainContract) => {
+	context.subscriptions.push(vscode.commands.registerCommand('cookbook.open', ({ address, mainFile }) => {
 		if (!vscode.workspace.workspaceFolders) {
 			vscode.window.showErrorMessage("Cookbook.dev: Please open a workspace (folder) first.");
 			return;
 		}
 		const listener = fsWatcher!.onDidCreate((uri) => {
-			const filename = getFilename(uri.fsPath);
-			console.log("james", filename);
-			if (filename === "simple-token.sol") {
-				console.log("found it")
+			if (getFilename(uri.fsPath) === getFilename(mainFile)) {
 				vscode.window.showTextDocument(uri);
 				listener.dispose();
 			}
 		});
-		console.log(vscode.workspace.workspaceFolders[0].uri.fsPath);
 		vscode.window.showInformationMessage('Cookbook.dev: downloading ' + address);
 		if (!terminal) {
 			terminal = vscode.window.createTerminal("Cookbook.dev");
