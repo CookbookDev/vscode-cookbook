@@ -28,13 +28,12 @@ export const ContractCard = ({ contract }) => {
               display: "flex",
               alignItems: "center",
               gap: "10px",
-              color: "white",
             }}
           >
             {contract.name}
           </h6>
           <p
-            className="card-text text-muted"
+            className="card-text"
             style={{
               fontSize: "10px",
               display: "flex",
@@ -48,7 +47,7 @@ export const ContractCard = ({ contract }) => {
             <Truncate>{contract.author}</Truncate>
           </p>
 
-          <p className="card-text text-muted" style={{ marginTop: "20px", marginBottom: "20px" }}>
+          <p className="card-text " style={{ marginTop: "20px", marginBottom: "20px" }}>
             {contract.simpleDescription}
           </p>
         </div>
@@ -60,15 +59,12 @@ export const ContractCard = ({ contract }) => {
             href={`https://www.cookbook.dev/contracts/${contract.address}?utm=vscode`}
             target="_blank"
             rel="noreferrer noopener"
-            style={{ fontSize: "small", color: "white" }}
+            style={{ fontSize: "small", color: "var(--vscode-input-foreground)" }}
           >
             View Docs and Stats
           </a>
           {contract.audit ? (
-            <div
-              className="card-text text-muted"
-              style={{ fontSize: "10px", display: "flex", alignItems: "center", gap: "5px" }}
-            >
+            <div className="card-text " style={{ fontSize: "10px", display: "flex", alignItems: "center", gap: "5px" }}>
               <img src={Badge} width={15} height={15} alt="audited badge" />
               Audited
             </div>
@@ -87,7 +83,7 @@ const Truncate = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: white;
+  color: "var(--vscode-input-foreground)";
 `;
 
 const Card = styled.div`
@@ -95,6 +91,6 @@ const Card = styled.div`
   cursor: pointer;
   background-color: var(--vscode-input-background);
   &:hover {
-    background-color: var(--vscode-button-hoverBackground);
+    background-color: var(--vscode-button-secondaryHoverBackground);
   }
 `;

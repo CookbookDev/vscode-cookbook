@@ -49,7 +49,7 @@ export default function App() {
             gap: "8px",
             textDecoration: "none",
             marginBottom: "20px",
-            color: "white",
+            color: "var(--vscode-input-foreground)",
           }}
         >
           <img
@@ -81,9 +81,7 @@ export default function App() {
 
       <div class="input-group mb-3">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroup-sizing-default">
-            Search
-          </span>
+          <span class="input-group-text">Search</span>
         </div>
         <input
           type="text"
@@ -98,7 +96,7 @@ export default function App() {
         />
       </div>
       {loading ? (
-        <div className="card-text text-muted">Searching...</div>
+        <div className="card-text">Searching...</div>
       ) : Boolean(contracts.length) ? (
         contracts.map((contract) => <ContractCard key={contract.address} contract={contract} />)
       ) : (
