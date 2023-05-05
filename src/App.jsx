@@ -54,13 +54,13 @@ export default function App() {
         >
           <img
             src="https://www.cookbook.dev/_next/image?url=https%3A%2F%2Fsmart-contract-recipes.s3.amazonaws.com%2F0x07590a393C67670463b80768fEED264832541d51%2Fcookbook_logo_transparent.png&w=48&q=75"
-            width={45}
-            height={45}
+            width={35}
+            height={35}
             alt="Cookbook logo"
           />
           <div
             style={{
-              fontSize: "28px",
+              fontSize: "24px",
               fontWeight: "bold",
               width: "100%",
               alignSelf: "flex-end",
@@ -73,21 +73,17 @@ export default function App() {
           href="https://discord.gg/WzsfPcfHrk"
           target="_blank"
           rel="noreferrer noopener"
-          style={{ display: "flex", gap: "5px", marginTop: "20px", marginBottom: "10px" }}
+          style={{ display: "flex", gap: "5px", marginBottom: "10px" }}
         >
           <img src={Discord} width={16} height={12} />
         </a>
       </div>
 
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Search</span>
-        </div>
+      <div class="input-group input-group-sm mb-3 p-0">
         <input
           type="text"
           class="form-control"
-          aria-label="Default"
-          aria-describedby="inputGroup-sizing-default"
+          placeholder="Search for contracts"
           onChange={(e) => {
             setSearch(e.target.value);
             setLoading(true);

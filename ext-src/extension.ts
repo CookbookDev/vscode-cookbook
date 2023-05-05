@@ -6,6 +6,7 @@ import { CustomSidebarViewProvider } from './customSidebarViewProvider';
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	let terminal: vscode.Terminal | undefined = vscode.window.createTerminal("Cookbook.dev");
+	terminal.sendText(`npm install cookbookdev@latest -g`);
 
 	// Console diagnostic information (console.log) and errors (console.error)
 	// Will only be executed once when your extension is activated

@@ -47,22 +47,21 @@ export const ContractCard = ({ contract }) => {
             <Truncate>{contract.author}</Truncate>
           </p>
 
-          <p className="card-text " style={{ marginTop: "20px", marginBottom: "20px" }}>
+          <p className="card-text " style={{ marginTop: "20px", marginBottom: "20px", opacity: 0.8 }}>
             {contract.simpleDescription}
           </p>
         </div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <a
+          <DocLink
             onClick={(e) => {
               // track("Remix: open cookbook", { contract: contract.address }, userData);
             }}
             href={`https://www.cookbook.dev/contracts/${contract.address}?utm=vscode`}
             target="_blank"
             rel="noreferrer noopener"
-            style={{ fontSize: "small", color: "var(--vscode-input-foreground)" }}
           >
             View Docs and Stats
-          </a>
+          </DocLink>
           {contract.audit ? (
             <div className="card-text " style={{ fontSize: "10px", display: "flex", alignItems: "center", gap: "5px" }}>
               <img src={Badge} width={15} height={15} alt="audited badge" />
@@ -92,5 +91,15 @@ const Card = styled.div`
   background-color: var(--vscode-input-background);
   &:hover {
     background-color: var(--vscode-button-secondaryHoverBackground);
+  }
+`;
+
+const DocLink = styled.a`
+  font-size: small;
+  color: var(--vscode-input-foreground);
+  opacity: 0.8;
+  &:hover {
+    color: var(--vscode-input-foreground);
+    opacity: 1;
   }
 `;

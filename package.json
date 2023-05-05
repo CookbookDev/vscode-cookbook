@@ -1,13 +1,14 @@
 {
   "name": "vscode-cookbook",
-  "displayName": "vscode-cookbook",
+  "displayName": "Cookbook.dev: Smart Contracts",
   "publisher": "cookbookdev",
   "repository": {
     "type": "git",
     "url": "https://github.com/Breakthrough-Labs/vscode-cookbook"
   },
-  "description": "",
-  "version": "0.0.1",
+  "description": "Find any smart contract, build your project faster",
+  "version": "0.0.3",
+  "icon": "public/logo.png",
   "engines": {
     "vscode": "^1.77.0"
   },
