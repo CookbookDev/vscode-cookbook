@@ -1,22 +1,35 @@
 // The module 'vscode' contains the VS Code extensibility API
 import * as vscode from 'vscode';
 import { CustomSidebarViewProvider } from './customSidebarViewProvider';
-import { getFilename } from './utils';
+import { LocalStorageService } from './storageManger';
+import { genHexString, getFilename, track } from './utils';
 
 let terminal: vscode.Terminal | undefined;
 let fsWatcher: vscode.FileSystemWatcher | undefined;
+let provider: CustomSidebarViewProvider | undefined;
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+
 	if (!fsWatcher) {
 		fsWatcher = vscode.workspace.createFileSystemWatcher("**/*");
 	}
 	if (!terminal) { terminal = vscode.window.createTerminal("Cookbook.dev"); }
 	terminal.sendText(`npm install cookbookdev@latest -g`);
 
-	// TODO: Assuming this needs to be disposed of when the extension is deactivated
-	const provider = new CustomSidebarViewProvider(context.extensionUri);
+	const storageManager = new LocalStorageService(context.workspaceState);
+	let userId = storageManager.getValue<string>("userId");
+	if (!userId) {
+		const randomString = genHexString(24);
+		storageManager.setValue("userId", randomString);
+		userId = randomString;
+		track("VScode: Plugin Installed", {}, userId);
+	}
+
+	track("VScode: view plugin", {}, userId);
+
+	provider = new CustomSidebarViewProvider(context.extensionUri);
 
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(
@@ -32,6 +45,10 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		})
 	);
+
+	context.subscriptions.push(vscode.commands.registerCommand('cookbook.track', ({ metric, data }) => {
+		track(metric, data, userId);
+	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('cookbook.open', ({ address, mainFile }) => {
 		if (!vscode.workspace.workspaceFolders) {
@@ -80,5 +97,8 @@ export function deactivate() {
 	if (terminal) {
 		terminal.dispose();
 		terminal = undefined;
+	}
+	if (provider) {
+		provider = undefined;
 	}
 }

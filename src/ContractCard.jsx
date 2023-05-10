@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import Badge from "./green-badge-icon.png";
 
-const vscode = acquireVsCodeApi();
-
-export const ContractCard = ({ contract }) => {
+export const ContractCard = ({ contract, vscode }) => {
   const [opening, setOpening] = useState(false);
+
+  const track = useCallback(
+    (metric, data) => {
+      vscode.postMessage({
+        command: "track",
+        data: { metric, data },
+      });
+    },
+    [vscode]
+  );
 
   return (
     <Card key={contract.address} className="card mb-2 hover-overlay">
@@ -14,13 +22,14 @@ export const ContractCard = ({ contract }) => {
           style={{ marginBottom: "20px" }}
           onClick={() => {
             setOpening(true);
+            track("VScode: contract opened", { contract: contract.address, contractId: contract._id });
             vscode.postMessage({
               command: "open",
               data: { address: contract.address, mainFile: contract.mainFile },
             });
             setTimeout(() => {
               setOpening(false);
-            }, 2000);
+            }, 4000);
           }}
         >
           <h6
@@ -57,7 +66,7 @@ export const ContractCard = ({ contract }) => {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <DocLink
             onClick={(e) => {
-              // track("Remix: open cookbook", { contract: contract.address }, userData);
+              track("VScode: open cookbook", { contract: contract.address });
             }}
             href={`https://www.cookbook.dev/contracts/${contract.address}?utm=vscode`}
             target="_blank"

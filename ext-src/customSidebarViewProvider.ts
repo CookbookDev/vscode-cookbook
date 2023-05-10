@@ -27,6 +27,10 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
             vscode.window.showErrorMessage(message.text);
             vscode.commands.executeCommand('cookbook.open', message.data);
             return;
+          case 'track':
+            vscode.window.showErrorMessage(message.text);
+            vscode.commands.executeCommand('cookbook.track', message.data);
+            return;
           case 'alert':
             vscode.window.showErrorMessage(message.text);
             return;

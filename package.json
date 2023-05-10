@@ -47,6 +47,10 @@
         "title": "Cookbook Contract Opener"
       },
       {
+        "command": "cookbook.track",
+        "title": "Cookbook Usage Tracker"
+      },
+      {
         "command": "cookbook.menu.view",
         "category": "vscode-extension-sidebar-html",
         "title": "Sample WebView in VS Code Sidebar",

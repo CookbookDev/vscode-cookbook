@@ -5,6 +5,15 @@ import Discord from "./discord-mark-white.png";
 
 axios.defaults.baseURL = "https://simple-web3-api.herokuapp.com";
 
+const vscode = acquireVsCodeApi();
+
+const track = (metric, data) => {
+  vscode.postMessage({
+    command: "track",
+    data: { metric, data },
+  });
+};
+
 export default function App() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -20,7 +29,7 @@ export default function App() {
           page: 1,
           plugin: true,
         });
-        // track("Remix: search", { query: search }, userData);
+        track("VScode: search", { query: search });
         setContracts(res.data.contracts);
         setLoading(false);
       } catch (error) {
@@ -44,6 +53,7 @@ export default function App() {
           href="https://www.cookbook.dev?utm=vscode"
           target="_blank"
           rel="noreferrer noopener"
+          onClick={() => track("VScode: open cookbook", {})}
           style={{
             display: "flex",
             gap: "8px",
@@ -74,6 +84,9 @@ export default function App() {
           target="_blank"
           rel="noreferrer noopener"
           style={{ display: "flex", gap: "5px", marginBottom: "10px" }}
+          onClick={() => {
+            track("VScode: Discord Opened", {});
+          }}
         >
           <img src={Discord} width={16} height={12} />
         </a>
@@ -94,7 +107,7 @@ export default function App() {
       {loading ? (
         <div className="card-text">Searching...</div>
       ) : Boolean(contracts.length) ? (
-        contracts.map((contract) => <ContractCard key={contract.address} contract={contract} />)
+        contracts.map((contract) => <ContractCard key={contract.address} contract={contract} vscode={vscode} />)
       ) : (
         <div>No contracts found</div>
       )}
