@@ -16,3 +16,18 @@
 <br />
 
 # Find any smart contract, build your project faster
+
+The Cookbook extension lets you install any of the 1000s of Cookbook contracts directly into your personal workflow. In seconds, you can have a contract or library - and all of its dependencies - ready to deploy or edit in your favorite development environment.
+
+- hardhat
+- truffle
+- brownie
+- forge
+- and everything else
+
+## Features
+
+- Smart contract search
+- ChatGPT-generated documentation
+- No code contract deploy
+- Remix and ChainIDE integration

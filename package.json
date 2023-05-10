@@ -1,13 +1,13 @@
 {
   "name": "vscode-cookbook",
-  "displayName": "Cookbook.dev: Smart Contracts",
+  "displayName": "Cookbook.dev - Smart Contracts",
   "publisher": "cookbookdev",
   "repository": {
     "type": "git",
     "url": "https://github.com/Breakthrough-Labs/vscode-cookbook"
   },
   "description": "Find any smart contract, build your project faster",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "icon": "public/logo.png",
   "engines": {
     "vscode": "^1.77.0"
@@ -69,7 +69,7 @@
     "esbuild-base": "esbuild ./ext-src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
     "build": "react-scripts build",
     "start": "react-scripts start",
-    "watch": "tsc -watch -p tsconfig.extension.json",
+    "watch": "tsc -watch -p tsconfig.json",
     "pretest": "yarn run compile && yarn run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js"
