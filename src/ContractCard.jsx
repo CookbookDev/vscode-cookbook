@@ -181,6 +181,6 @@ const Stars = styled.div`
   cursor: pointer;
   text-decoration: none;
   border-radius: 5px;
-  color: var(--vscode-gitDecoration-addedResourceForeground);
+  color: #1b9e70;
   border: solid 1px rgb(0, 0, 0, 0);
 `;
