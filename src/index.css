@@ -1,5 +1,5 @@
 /* https://code.visualstudio.com/api/references/theme-color */
-/* 
+/*
 VScode theme variables
 https://gist.github.com/estruyf/ba49203e1a7d6868e9320a4ea480c27a */
 body {
@@ -8,6 +8,6 @@ body {
   font-family: var(--vscode-editor-font-family) !important;
   background-color: transparent;
   color: var(--vscode-input-foreground);
-  font-size: small;
+  font-size: 10px;
   height: 100vh;
 }

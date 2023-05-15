@@ -19,10 +19,13 @@ export const ContractCard = ({ contract, vscode }) => {
     <Card key={contract.address} className="card mb-2 hover-overlay">
       <div className="card-body">
         <div
-          style={{ marginBottom: "20px" }}
+          style={{ marginBottom: "10px" }}
           onClick={() => {
             setOpening(true);
-            track("VScode: contract opened", { contract: contract.address, contractId: contract._id });
+            track("VScode: contract opened", {
+              contract: contract.address,
+              contractId: contract._id,
+            });
             vscode.postMessage({
               command: "open",
               data: { address: contract.address, mainFile: contract.mainFile },
@@ -37,6 +40,7 @@ export const ContractCard = ({ contract, vscode }) => {
             style={{
               lineHeight: "1.4",
               fontWeight: "bold",
+              fontSize: "14px",
               display: "flex",
               alignItems: "center",
               gap: "10px",
@@ -71,7 +75,12 @@ export const ContractCard = ({ contract, vscode }) => {
               }}
             >
               {contract.picture && (
-                <img src={contract.picture} width={15} height={15} style={{ borderRadius: "10px" }} />
+                <img
+                  src={contract.picture}
+                  width={15}
+                  height={15}
+                  style={{ borderRadius: "10px" }}
+                />
               )}
               <Truncate>{contract.author}</Truncate>
             </a>
@@ -90,11 +99,17 @@ export const ContractCard = ({ contract, vscode }) => {
             </Stars>
           </div>
 
-          <p className="card-text " style={{ marginTop: "20px", marginBottom: "20px", opacity: 0.8 }}>
+          <p className="card-text " style={{ marginTop: "10px", opacity: 0.8 }}>
             {contract.simpleDescription}
           </p>
         </div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <DocLink
             onClick={(e) => {
               track("VScode: open cookbook", { contract: contract.address });
@@ -106,7 +121,15 @@ export const ContractCard = ({ contract, vscode }) => {
             View Docs and Stats
           </DocLink>
           {contract.audit ? (
-            <div className="card-text " style={{ fontSize: "10px", display: "flex", alignItems: "center", gap: "5px" }}>
+            <div
+              className="card-text "
+              style={{
+                fontSize: "10px",
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+              }}
+            >
               <img src={Badge} width={15} height={15} alt="audited badge" />
               Audited
             </div>
@@ -139,7 +162,7 @@ const Card = styled.div`
 `;
 
 const DocLink = styled.a`
-  font-size: small;
+  font-size: 10px;
   color: var(--vscode-input-foreground);
   opacity: 0.8;
   &:hover {
