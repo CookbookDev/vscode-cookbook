@@ -64,13 +64,13 @@ export default function App() {
         >
           <img
             src="https://www.cookbook.dev/_next/image?url=https%3A%2F%2Fsmart-contract-recipes.s3.amazonaws.com%2F0x07590a393C67670463b80768fEED264832541d51%2Fcookbook_logo_transparent.png&w=48&q=75"
-            width={35}
-            height={35}
+            width={30}
+            height={30}
             alt="Cookbook logo"
           />
           <div
             style={{
-              fontSize: "24px",
+              fontSize: "large",
               fontWeight: "bold",
               width: "100%",
               alignSelf: "flex-end",
