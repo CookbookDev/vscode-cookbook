@@ -2,16 +2,41 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ContractCard } from "./ContractCard";
 import Discord from "./discord-mark-white.png";
+import { DeviceUUID } from "device-uuid";
 
-axios.defaults.baseURL = "https://simple-web3-api.herokuapp.com";
+axios.defaults.baseURL = "http://localhost:5001";
 
 const vscode = acquireVsCodeApi();
 
 const track = (metric, data) => {
+  let du = new DeviceUUID().parse();
+  let dua = [
+    du.platform,
+    du.resolution,
+    du.os,
+    du.pixelDepth,
+    du.language,
+    du.isMac,
+    du.isDesktop,
+    du.isMobile,
+    du.isTablet,
+    du.isWindows,
+    du.isLinux,
+    du.isLinux64,
+    du.isiPad,
+    du.isiPhone,
+    du.isTouchScreen,
+    du.cpuCores,
+    du.colorDepth
+  ];
+  let uuid = du.hashMD5(dua.join(':'));
+  console.log(dua, uuid)
+  data.uuid = uuid
   vscode.postMessage({
     command: "track",
-    data: { metric, data },
+    data: { metric, data }, // this is how track is called in the react app
   });
+
 };
 
 export default function App() {
@@ -39,6 +64,10 @@ export default function App() {
 
     return () => clearTimeout(debounceSearch);
   }, [search]);
+
+  useEffect(() => {
+    track("VScode: view plugin", {});
+  }, [])
 
   return (
     <div className="p-3">
@@ -76,7 +105,7 @@ export default function App() {
               alignSelf: "flex-end",
             }}
           >
-            Cookbook.dev
+            _Cookbook.dev
           </div>
         </a>
         <a

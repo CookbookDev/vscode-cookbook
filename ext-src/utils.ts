@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "https://simple-web3-api.herokuapp.com";
+axios.defaults.baseURL = "http://localhost:5001";
 
 export const getFilename = (path: string) => {
   const parts = path.split(/[\\/]/);

@@ -21,13 +21,9 @@ export function activate(context: vscode.ExtensionContext) {
 	const storageManager = new LocalStorageService(context.workspaceState);
 	let userId = storageManager.getValue<string>("userId");
 	if (!userId) {
-		const randomString = genHexString(24);
-		storageManager.setValue("userId", randomString);
-		userId = randomString;
 		track("VScode: Plugin Installed", {}, userId);
 	}
 
-	track("VScode: view plugin", {}, userId);
 
 	provider = new CustomSidebarViewProvider(context.extensionUri);
 
@@ -46,7 +42,12 @@ export function activate(context: vscode.ExtensionContext) {
 		})
 	);
 
-	context.subscriptions.push(vscode.commands.registerCommand('cookbook.track', ({ metric, data }) => {
+	context.subscriptions.push(vscode.commands.registerCommand('cookbook.save-id', ({ metric, data }) => {
+		const storageManager = new LocalStorageService(context.workspaceState);
+		let userId = storageManager.getValue<string>("userId");
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('cookbook.track', ({ metric, data }) => { // this is how mixpanel is called
 		track(metric, data, userId);
 	}));
 
@@ -66,7 +67,7 @@ export function activate(context: vscode.ExtensionContext) {
 			terminal = vscode.window.createTerminal("Cookbook.dev");
 		}
 		terminal.show();
-		terminal.sendText(`npx cookbookdev install ${address}`);
+		terminal.sendText(`npx cookbookdev install ${address} -plugin`);
 	}));
 
 
