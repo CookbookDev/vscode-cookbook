@@ -17,6 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 	if (!terminal) { terminal = vscode.window.createTerminal("Cookbook.dev"); }
 	terminal.sendText(`npm install cookbookdev@latest -g`);
+	terminal.sendText("clear");
 
 	const storageManager = new LocalStorageService(context.workspaceState);
 	let userId = storageManager.getValue<string>("newId");
