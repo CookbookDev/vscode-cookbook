@@ -1,8 +1,8 @@
 import axios from "axios";
+import { DeviceUUID } from "device-uuid";
 import React, { useEffect, useState } from "react";
 import { ContractCard } from "./ContractCard";
 import Discord from "./discord-mark-white.png";
-import { DeviceUUID } from "device-uuid";
 
 axios.defaults.baseURL = "https://simple-web3-api-staging.herokuapp.com";
 
@@ -27,14 +27,14 @@ const track = (metric, data) => {
     du.isiPhone,
     du.isTouchScreen,
     du.cpuCores,
-    du.colorDepth
+    du.colorDepth,
   ];
-  let uuid = du.hashMD5(dua.join(':'));
-  data.uuid = uuid
+  let uuid = du.hashMD5(dua.join(":"));
+  data.uuid = uuid;
   vscode.postMessage({
     command: "track",
     data: { metric, data },
-  })
+  });
 };
 
 export default function App() {
@@ -65,7 +65,7 @@ export default function App() {
 
   useEffect(() => {
     track("VScode: view plugin", {});
-  }, [])
+  }, []);
 
   return (
     <div className="p-3">
@@ -134,7 +134,14 @@ export default function App() {
       {loading ? (
         <div className="card-text">Searching...</div>
       ) : Boolean(contracts.length) ? (
-        contracts.map((contract) => <ContractCard key={contract.address} contract={contract} vscode={vscode} track={track} />)
+        contracts.map((contract) => (
+          <ContractCard
+            key={contract.address}
+            contract={contract}
+            vscode={vscode}
+            track={track}
+          />
+        ))
       ) : (
         <div>No contracts found</div>
       )}

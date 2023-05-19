@@ -1,7 +1,6 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Badge from "./green-badge-icon.png";
-import { DeviceUUID } from "device-uuid";
 
 export const ContractCard = ({ contract, vscode, track }) => {
   const [opening, setOpening] = useState(false);

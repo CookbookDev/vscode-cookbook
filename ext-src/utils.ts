@@ -16,14 +16,14 @@ export const track = (metric: string, data: any, userID: string) => {
       deviceType: "vscode",
       platform: "vscode",
       userID,
-      ...data
+      ...data,
     },
   });
 };
 
 export function genHexString(len: number) {
-  const hex = '0123456789ABCDEF';
-  let output = '';
+  const hex = "0123456789ABCDEF";
+  let output = "";
   for (let i = 0; i < len; ++i) {
     output += hex.charAt(Math.floor(Math.random() * hex.length));
   }

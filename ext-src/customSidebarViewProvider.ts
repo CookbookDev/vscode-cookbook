@@ -5,7 +5,7 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
 
   public _view?: vscode.WebviewView;
 
-  constructor(private readonly _extensionUri: vscode.Uri) { }
+  constructor(private readonly _extensionUri: vscode.Uri) {}
 
   resolveWebviewView(
     webviewView: vscode.WebviewView,
@@ -20,25 +20,22 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._extensionUri],
     };
     webviewView.webview.html = this.getHtmlContent(webviewView.webview);
-    webviewView.webview.onDidReceiveMessage(
-      message => {
-        switch (message.command) {
-          case 'open':
-            vscode.window.showErrorMessage(message.text);
-            vscode.commands.executeCommand('cookbook.open', message.data);
-            return;
-          case 'track':
-            vscode.window.showErrorMessage(message.text);
-            vscode.commands.executeCommand('cookbook.track', message.data);
-            return;
-          case 'alert':
-            vscode.window.showErrorMessage(message.text);
-            return;
-        }
-      },
-    );
+    webviewView.webview.onDidReceiveMessage((message) => {
+      switch (message.command) {
+        case "open":
+          vscode.window.showErrorMessage(message.text);
+          vscode.commands.executeCommand("cookbook.open", message.data);
+          return;
+        case "track":
+          vscode.window.showErrorMessage(message.text);
+          vscode.commands.executeCommand("cookbook.track", message.data);
+          return;
+        case "alert":
+          vscode.window.showErrorMessage(message.text);
+          return;
+      }
+    });
   }
-
 
   private getHtmlContent(webview: vscode.Webview): string {
     const manifest = require("../build/asset-manifest.json");
@@ -46,11 +43,15 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
     const mainScript = manifest.files["main.js"];
     const mainStyle = manifest.files["main.css"];
     const scriptPathOnDisk = vscode.Uri.joinPath(
-      this._extensionUri, "build", mainScript
+      this._extensionUri,
+      "build",
+      mainScript
     );
     const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
     const stylePathOnDisk = vscode.Uri.joinPath(
-      this._extensionUri, "build", mainStyle
+      this._extensionUri,
+      "build",
+      mainStyle
     );
     const styleUri = webview.asWebviewUri(stylePathOnDisk);
 
@@ -65,13 +66,15 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
 				<meta name="theme-color" content="#000000">
 				<title>React App</title>
 				<link rel="stylesheet" type="text/css" href="${styleUri}">
-        <base href="${webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "build", "index.html"))}/">
+        <base href="${webview.asWebviewUri(
+          vscode.Uri.joinPath(this._extensionUri, "build", "index.html")
+        )}/">
         </head>
 
 			<body>
 				<noscript>You need to enable JavaScript to run this app.</noscript>
 				<div id="root"></div>
-				
+
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
 			</html>`;
