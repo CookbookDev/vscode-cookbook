@@ -3,41 +3,8 @@ import styled from "styled-components";
 import Badge from "./green-badge-icon.png";
 import { DeviceUUID } from "device-uuid";
 
-export const ContractCard = ({ contract, vscode }) => {
+export const ContractCard = ({ contract, vscode, track }) => {
   const [opening, setOpening] = useState(false);
-
-  const track = useCallback(
-    (metric, data) => {
-      let du = new DeviceUUID().parse();
-      let dua = [
-        du.platform,
-        du.resolution,
-        du.os,
-        du.pixelDepth,
-        du.language,
-        du.isMac,
-        du.isDesktop,
-        du.isMobile,
-        du.isTablet,
-        du.isWindows,
-        du.isLinux,
-        du.isLinux64,
-        du.isiPad,
-        du.isiPhone,
-        du.isTouchScreen,
-        du.cpuCores,
-        du.colorDepth
-      ];
-      let uuid = du.hashMD5(dua.join(':'));
-      console.log(dua, uuid)
-      data.uuid = uuid
-      vscode.postMessage({
-        command: "track",
-        data: { metric, data },
-      });
-    },
-    [vscode]
-  );
 
   return (
     <Card key={contract.address} className="card mb-2 hover-overlay">

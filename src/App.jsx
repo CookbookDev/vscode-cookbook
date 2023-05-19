@@ -4,39 +4,58 @@ import { ContractCard } from "./ContractCard";
 import Discord from "./discord-mark-white.png";
 import { DeviceUUID } from "device-uuid";
 
-axios.defaults.baseURL = "http://localhost:5001";
+axios.defaults.baseURL = "https://simple-web3-api-staging.herokuapp.com";
 
 const vscode = acquireVsCodeApi();
 
 const track = (metric, data) => {
-  let du = new DeviceUUID().parse();
-  let dua = [
-    du.platform,
-    du.resolution,
-    du.os,
-    du.pixelDepth,
-    du.language,
-    du.isMac,
-    du.isDesktop,
-    du.isMobile,
-    du.isTablet,
-    du.isWindows,
-    du.isLinux,
-    du.isLinux64,
-    du.isiPad,
-    du.isiPhone,
-    du.isTouchScreen,
-    du.cpuCores,
-    du.colorDepth
-  ];
-  let uuid = du.hashMD5(dua.join(':'));
-  console.log(dua, uuid)
-  data.uuid = uuid
-  vscode.postMessage({
-    command: "track",
-    data: { metric, data }, // this is how track is called in the react app
-  });
-
+  let knownId = vscode.postMessage({
+    command: "get-id",
+    data: {}
+  })
+  if (!knownId) {
+    let du = new DeviceUUID().parse();
+    let dua = [
+      du.platform,
+      du.resolution,
+      du.os,
+      du.pixelDepth,
+      du.language,
+      du.isMac,
+      du.isDesktop,
+      du.isMobile,
+      du.isTablet,
+      du.isWindows,
+      du.isLinux,
+      du.isLinux64,
+      du.isiPad,
+      du.isiPhone,
+      du.isTouchScreen,
+      du.cpuCores,
+      du.colorDepth
+    ];
+    let uuid = du.hashMD5(dua.join(':'));
+    console.log(dua, uuid)
+    data.uuid = uuid
+  }
+  else {
+    data.uuid = knownId
+  }
+  axios.post(`/track/`, {
+    metric,
+    data: {
+      browser: "vscode",
+      deviceType: "vscode",
+      platform: "vscode",
+      userID,
+      ...data
+    },
+  }).then(res => {
+    vscode.postMessage({
+      command: "save-id",
+      data: res.data
+    })
+  })
 };
 
 export default function App() {
@@ -136,7 +155,7 @@ export default function App() {
       {loading ? (
         <div className="card-text">Searching...</div>
       ) : Boolean(contracts.length) ? (
-        contracts.map((contract) => <ContractCard key={contract.address} contract={contract} vscode={vscode} />)
+        contracts.map((contract) => <ContractCard key={contract.address} contract={contract} vscode={vscode} track={track}/>)
       ) : (
         <div>No contracts found</div>
       )}

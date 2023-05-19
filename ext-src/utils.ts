@@ -1,6 +1,7 @@
 import axios from "axios";
+import { LocalStorageService } from './storageManger';
 
-axios.defaults.baseURL = "http://localhost:5001";
+axios.defaults.baseURL = "https://simple-web3-api-staging.herokuapp.com";
 
 export const getFilename = (path: string) => {
   const parts = path.split(/[\\/]/);
