@@ -19,11 +19,8 @@ export function activate(context: vscode.ExtensionContext) {
 	terminal.sendText(`npm install cookbookdev@latest -g`);
 	terminal.sendText("clear");
 
-	const storageManager = new LocalStorageService(context.workspaceState);
-	let userId = storageManager.getValue<string>("newId");
-	if (!userId) {
-		// track("VScode: Plugin Installed", {}, userId);
-	}
+	const consoleLog = vscode.window.createOutputChannel("test")
+	const storageManager = new LocalStorageService(context.globalState);
 
 
 	provider = new CustomSidebarViewProvider(context.extensionUri);
@@ -43,18 +40,16 @@ export function activate(context: vscode.ExtensionContext) {
 		})
 	);
 
-	context.subscriptions.push(vscode.commands.registerCommand('cookbook.get-id', ({ metric, data }) => {
-		const storageManager = new LocalStorageService(context.workspaceState);
-		let userId = storageManager.getValue<string>("newId");
-		return userId
-	}));
-
-	context.subscriptions.push(vscode.commands.registerCommand('cookbook.save-id', ({ metric, data }) => {
-		const storageManager = new LocalStorageService(context.workspaceState);
-		storageManager.setValue<string>("newId", data);
-	}));
-
 	context.subscriptions.push(vscode.commands.registerCommand('cookbook.track', ({ metric, data }) => { // this is how mixpanel is called
+		// consoleLog.appendLine(data.uuid)
+		let userId = storageManager.getValue<string>("newId");
+		// consoleLog.appendLine(userId)
+		if (userId)
+			data.uuid = userId
+		else {
+			storageManager.setValue("newId", data.uuid);
+			track("VScode: Plugin Installed", {}, data.uuid);
+		}
 		track(metric, data, userId);
 	}));
 

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { LocalStorageService } from './storageManger';
 
 axios.defaults.baseURL = "https://simple-web3-api-staging.herokuapp.com";
 
