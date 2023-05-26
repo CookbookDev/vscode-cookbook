@@ -44,6 +44,7 @@ export const ContractCard = ({ contract, vscode, track }) => {
               justifyContent: "space-between",
               alignItems: "center",
               marginTop: "10px",
+              width: "100%"
             }}
           >
             <a
@@ -62,6 +63,7 @@ export const ContractCard = ({ contract, vscode, track }) => {
                 gap: "5px",
                 marginTop: "5px",
                 textDecorationColor: "var(--vscode-input-foreground)",
+                width: "50%"
               }}
             >
               {contract.picture && (
@@ -134,7 +136,6 @@ export const ContractCard = ({ contract, vscode, track }) => {
 };
 
 const Truncate = styled.div`
-  width: 100%;
   color: var(--vscode-input-foreground);
   text-decoration-color: var(--vscode-input-foreground);
   white-space: nowrap;
