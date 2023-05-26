@@ -44,7 +44,7 @@ export const ContractCard = ({ contract, vscode, track }) => {
               justifyContent: "space-between",
               alignItems: "center",
               marginTop: "10px",
-              width: "100%"
+              width: "100%",
             }}
           >
             <a
@@ -63,16 +63,11 @@ export const ContractCard = ({ contract, vscode, track }) => {
                 gap: "5px",
                 marginTop: "5px",
                 textDecorationColor: "var(--vscode-input-foreground)",
-                width: "50%"
+                width: "50%",
               }}
             >
               {contract.picture && (
-                <img
-                  src={contract.picture}
-                  width={15}
-                  height={15}
-                  style={{ borderRadius: "10px" }}
-                />
+                <img src={contract.picture} width={15} height={15} style={{ borderRadius: "10px" }} />
               )}
               <Truncate>{contract.author}</Truncate>
             </a>
