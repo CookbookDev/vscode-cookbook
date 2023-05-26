@@ -10,4 +10,5 @@ body {
   color: var(--vscode-input-foreground);
   font-size: 10px;
   height: 100vh;
+  min-width: 300px;
 }
