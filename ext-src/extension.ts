@@ -25,6 +25,28 @@ export function activate(context: vscode.ExtensionContext) {
 
 	provider = new CustomSidebarViewProvider(context.extensionUri);
 
+	vscode.window.registerUriHandler({
+		handleUri(uri: vscode.Uri): vscode.ProviderResult<void> {
+
+			let address = uri.toString().split('?')[1].split("%26")[0].split("%3D")[1]
+			let mainFile = uri.toString().split('?')[1].split("%26")[1].split("%3D")[1]
+			vscode.window.showInformationMessage('Cookbook.dev: opening ' + address);
+
+			const listener = fsWatcher!.onDidCreate((_uri) => {
+				if (getFilename(_uri.fsPath) === getFilename(mainFile)) {
+					vscode.window.showTextDocument(_uri);
+					listener.dispose();
+				}
+			});
+
+			if (!terminal) {
+				terminal = vscode.window.createTerminal("Cookbook.dev");
+			}
+			terminal.show();
+			terminal.sendText(`npx cookbookdev install ${address} -plugin`);
+		}
+	});
+
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(
 			CustomSidebarViewProvider.viewType,

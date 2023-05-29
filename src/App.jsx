@@ -41,6 +41,7 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [contracts, setContracts] = useState([]);
+  
 
   useEffect(() => {
     const debounceSearch = setTimeout(async () => {
