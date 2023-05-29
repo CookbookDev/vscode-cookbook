@@ -2,7 +2,7 @@
 import * as vscode from 'vscode';
 import { CustomSidebarViewProvider } from './customSidebarViewProvider';
 import { LocalStorageService } from './storageManger';
-import { genHexString, getFilename, track } from './utils';
+import { getFilename, track } from './utils';
 
 let terminal: vscode.Terminal | undefined;
 let fsWatcher: vscode.FileSystemWatcher | undefined;
@@ -19,7 +19,6 @@ export function activate(context: vscode.ExtensionContext) {
 	terminal.sendText(`npm install cookbookdev@latest -g`);
 	terminal.sendText("clear");
 
-	const consoleLog = vscode.window.createOutputChannel("test")
 	const storageManager = new LocalStorageService(context.globalState);
 
 
@@ -63,11 +62,10 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 
 	context.subscriptions.push(vscode.commands.registerCommand('cookbook.track', ({ metric, data }) => { // this is how mixpanel is called
-		// consoleLog.appendLine(data.uuid)
 		let userId = storageManager.getValue<string>("newId");
-		consoleLog.appendLine(userId)
-		if (userId)
-			data.uuid = userId
+		if (userId) {
+			data.uuid = userId;
+		}
 		else {
 			storageManager.setValue("newId", data.uuid);
 			track("VScode: Plugin Installed", {}, data.uuid);

@@ -7,7 +7,7 @@
     "url": "https://github.com/Breakthrough-Labs/vscode-cookbook"
   },
   "description": "Find any smart contract, build your project faster",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "icon": "public/logo.png",
   "engines": {
     "vscode": "^1.77.0"
@@ -68,7 +68,7 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "yarn run compile && yarn run build",
+    "vscode:prepublish": "yarn run build && yarn run compile",
     "compile": "npm run esbuild-base -- --minify",
     "esbuild-base": "esbuild ./ext-src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
     "build": "react-scripts build",

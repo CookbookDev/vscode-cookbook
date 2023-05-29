@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { ContractCard } from "./ContractCard";
 import Discord from "./discord-mark-white.png";
 
-axios.defaults.baseURL = "https://simple-web3-api-staging.herokuapp.com";
+axios.defaults.baseURL = "https://api.cookbook.dev";
 
 const vscode = acquireVsCodeApi();
 
