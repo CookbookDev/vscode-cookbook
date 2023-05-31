@@ -31,3 +31,5 @@ The Cookbook extension lets you install any of the 1000s of Cookbook contracts d
 - ChatGPT-generated documentation
 - No code contract deploy
 - Remix and ChainIDE integration
+
+
