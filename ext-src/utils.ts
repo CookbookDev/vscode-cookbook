@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "https://api.cookbook.dev";
+axios.defaults.baseURL = "https://simple-web3-api.herokuapp.com";
 
 export const getFilename = (path: string) => {
   const parts = path.split(/[\\/]/);
