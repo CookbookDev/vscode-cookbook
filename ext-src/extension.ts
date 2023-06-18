@@ -1,8 +1,5 @@
 // The module 'vscode' contains the VS Code extensibility API
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as os from 'os';
-import * as path from 'path';
 import { CustomSidebarViewProvider } from './customSidebarViewProvider';
 import { LocalStorageService } from './storageManger';
 import { getFilename, track, getFiles } from './utils';
@@ -34,14 +31,6 @@ export function activate(context: vscode.ExtensionContext) {
       let mainFile = uri.toString().split('?')[1].split("%26")[1].split("%3D")[1]
       vscode.window.showInformationMessage('Cookbook.dev: opening ' + address);
       getFiles(address)
-
-
-      // const listener = fsWatcher!.onDidCreate((_uri) => {
-      //   if (getFilename(_uri.fsPath) === getFilename(mainFile)) {
-      //     vscode.window.showTextDocument(_uri);
-      //     listener.dispose();
-      //   }
-      // });
 
     }
   });

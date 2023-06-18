@@ -7,7 +7,7 @@
     "url": "https://github.com/Breakthrough-Labs/vscode-cookbook"
   },
   "description": "Find any smart contract, build your project faster",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "icon": "public/logo.png",
   "engines": {
     "vscode": "^1.49.0"
