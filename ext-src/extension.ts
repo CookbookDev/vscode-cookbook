@@ -76,47 +76,10 @@ export function activate(context: vscode.ExtensionContext) {
     track(metric, data, userId);
   }));
 
-  // context.subscriptions.push(vscode.commands.registerCommand('cookbook.open', ({ address, mainFile }) => {
-  //   if (!vscode.workspace.workspaceFolders) {
-  //     vscode.window.showErrorMessage("Cookbook.dev: Please open a workspace (folder) first.");
-  //     return;
-  //   }
-  //   const listener = fsWatcher!.onDidCreate((uri) => {
-  //     if (getFilename(uri.fsPath) === getFilename(mainFile)) {
-  //       vscode.window.showTextDocument(uri);
-  //       listener.dispose();
-  //     }
-  //   });
-  //   vscode.window.showInformationMessage('Cookbook.dev: opening ' + address);
-  //   if (!terminal) {
-  //     terminal = vscode.window.createTerminal("Cookbook.dev");
-  //   }
-  //   terminal.show();
-  //   terminal.sendText(`npx cookbookdev install ${address} -plugin`);
-  // }));
 
   context.subscriptions.push(vscode.commands.registerCommand('cookbook.open', async ({ address }) => {
     try {
-
       getFiles(address)
-      // // Simulated remote file contents
-      // const remoteFileContents = 'This is the content of the remote file.';
-
-      // // Prompt the user to open the remote file in preview
-      // const choice = await vscode.window.showInformationMessage(
-      //   'Do you want to open the remote file in preview?',
-      //   'Open'
-      // );
-
-      // if (choice === 'Open') {
-      //   // Create a temporary file in the user's workspace
-      //   const tempFilePath = path.join(os.tmpdir(), 'tempfile.txt');
-      //   fs.writeFileSync(tempFilePath, remoteFileContents);
-
-      //   // Open the temporary file in preview
-      //   const document = await vscode.workspace.openTextDocument(tempFilePath);
-      //   await vscode.window.showTextDocument(document, { preview: true });
-      // }
     } catch (error: any) {
       vscode.window.showErrorMessage('Failed to open remote file: ' + error.message);
     }
