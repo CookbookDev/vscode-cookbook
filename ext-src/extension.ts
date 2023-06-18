@@ -33,19 +33,16 @@ export function activate(context: vscode.ExtensionContext) {
       let address = uri.toString().split('?')[1].split("%26")[0].split("%3D")[1]
       let mainFile = uri.toString().split('?')[1].split("%26")[1].split("%3D")[1]
       vscode.window.showInformationMessage('Cookbook.dev: opening ' + address);
+      getFiles(address)
 
-      const listener = fsWatcher!.onDidCreate((_uri) => {
-        if (getFilename(_uri.fsPath) === getFilename(mainFile)) {
-          vscode.window.showTextDocument(_uri);
-          listener.dispose();
-        }
-      });
 
-      if (!terminal) {
-        terminal = vscode.window.createTerminal("Cookbook.dev");
-      }
-      terminal.show();
-      terminal.sendText(`npx cookbookdev install ${address} -plugin`);
+      // const listener = fsWatcher!.onDidCreate((_uri) => {
+      //   if (getFilename(_uri.fsPath) === getFilename(mainFile)) {
+      //     vscode.window.showTextDocument(_uri);
+      //     listener.dispose();
+      //   }
+      // });
+
     }
   });
 

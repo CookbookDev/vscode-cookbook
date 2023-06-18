@@ -114,14 +114,8 @@ const saveContracts = async (contractAddress: string, mainFilename: string, file
   if (!fs.existsSync(depsPath)) {
     fs.mkdirSync(depsPath);
   }
+  vscode.window.showInformationMessage(`Cookbook.dev: opening ${contractAddress} in preview`);
 
-  const choice = await vscode.window.showInformationMessage(
-    'Do you want to open the remote file in preview?',
-    'Open'
-  );
-  if (choice !== 'Open') {
-    return `Cooking cancelled. '${contractAddress}' was not saved.`;
-  }
   for (const filename of keys) {
     let saveFilePath = "";
     if (filename === mainFilename) {
