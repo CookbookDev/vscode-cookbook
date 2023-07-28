@@ -4,7 +4,7 @@ import { CustomSidebarViewProvider } from './customSidebarViewProvider';
 import { LocalStorageService } from './storageManger';
 import { getFilename, track, getFiles } from './utils';
 
-let terminal: vscode.Terminal | undefined;
+// let terminal: vscode.Terminal | undefined;
 let fsWatcher: vscode.FileSystemWatcher | undefined;
 let provider: CustomSidebarViewProvider | undefined;
 
@@ -15,9 +15,6 @@ export function activate(context: vscode.ExtensionContext) {
   if (!fsWatcher) {
     fsWatcher = vscode.workspace.createFileSystemWatcher("**/*");
   }
-  if (!terminal) { terminal = vscode.window.createTerminal("Cookbook.dev"); }
-  terminal.sendText(`npm install cookbookdev@latest -g`);
-  terminal.sendText("clear");
 
   const storageManager = new LocalStorageService(context.globalState);
 
@@ -28,9 +25,9 @@ export function activate(context: vscode.ExtensionContext) {
     handleUri(uri: vscode.Uri): vscode.ProviderResult<void> {
 
       let address = uri.toString().split('?')[1].split("%26")[0].split("%3D")[1]
-      let mainFile = uri.toString().split('?')[1].split("%26")[1].split("%3D")[1]
+      let type = uri.toString().split('?')[1].split("%26")[1].split("%3D")[1]
       vscode.window.showInformationMessage('Cookbook.dev: opening ' + address);
-      getFiles(address)
+      getFiles(address, type)
 
     }
   });
@@ -40,14 +37,6 @@ export function activate(context: vscode.ExtensionContext) {
       CustomSidebarViewProvider.viewType,
       provider
     )
-  );
-
-  context.subscriptions.push(
-    vscode.window.onDidCloseTerminal((closedTerminal) => {
-      if (terminal === closedTerminal) {
-        terminal = undefined;
-      }
-    })
   );
 
   context.subscriptions.push(vscode.commands.registerCommand('cookbook.track', ({ metric, data }) => { // this is how mixpanel is called
@@ -63,9 +52,9 @@ export function activate(context: vscode.ExtensionContext) {
   }));
 
 
-  context.subscriptions.push(vscode.commands.registerCommand('cookbook.open', async ({ address }) => {
+  context.subscriptions.push(vscode.commands.registerCommand('cookbook.open', async ({ urlId, type }) => {
     try {
-      getFiles(address)
+      getFiles(urlId, type)
     } catch (error: any) {
       vscode.window.showErrorMessage('Failed to open remote file: ' + error.message);
     }
@@ -96,10 +85,7 @@ export function deactivate() {
     fsWatcher.dispose();
     fsWatcher = undefined;
   }
-  if (terminal) {
-    terminal.dispose();
-    terminal = undefined;
-  }
+
   if (provider) {
     provider = undefined;
   }

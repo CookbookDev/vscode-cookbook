@@ -2,9 +2,12 @@ import axios from "axios";
 import { DeviceUUID } from "device-uuid";
 import React, { useEffect, useState } from "react";
 import { ContractCard } from "./ContractCard";
+import { ProtocolCard } from "./ProtocolCard";
 import Discord from "./discord-mark-white.png";
 
-axios.defaults.baseURL = "https://simple-web3-api.herokuapp.com";
+axios.defaults.baseURL = "http://localhost:5001";
+
+// axios.defaults.baseURL = "https://simple-web3-api.herokuapp.com";
 
 const vscode = acquireVsCodeApi();
 
@@ -41,7 +44,7 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [contracts, setContracts] = useState([]);
-  
+  const [protocols, setProtocols] = useState([])
 
   useEffect(() => {
     const debounceSearch = setTimeout(async () => {
@@ -55,6 +58,7 @@ export default function App() {
         });
         track("VScode: search", { query: search });
         setContracts(res.data.contracts);
+        setProtocols(res.data.protocols)
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -135,16 +139,26 @@ export default function App() {
       {loading ? (
         <div className="card-text">Searching...</div>
       ) : Boolean(contracts.length) ? (
-        contracts.map((contract) => (
-          <ContractCard
-            key={contract.address}
-            contract={contract}
-            vscode={vscode}
-            track={track}
-          />
-        ))
+        <>
+          {protocols.map((protocol) => (
+            <ProtocolCard
+              key={protocol.urlId}
+              protocol={protocol}
+              vscode={vscode}
+              track={track}
+            />
+          ))}
+          {contracts.map((contract) => (
+            <ContractCard
+              key={contract.urlId}
+              contract={contract}
+              vscode={vscode}
+              track={track}
+            />
+          ))}
+        </>
       ) : (
-        <div>No contracts found</div>
+      <div>No contracts found</div>
       )}
     </div>
   );

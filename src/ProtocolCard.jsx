@@ -2,23 +2,23 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Badge from "./green-badge-icon.png";
 
-export const ContractCard = ({ contract, vscode, track }) => {
+export const ProtocolCard = ({ protocol, vscode, track }) => {
   const [opening, setOpening] = useState(false);
 
   return (
-    <Card key={contract.urlId} className="card mb-2 hover-overlay">
+    <Card key={protocol.urlId} className="card mb-2 hover-overlay">
       <div className="card-body">
         <div
           style={{ marginBottom: "10px" }}
           onClick={() => {
             setOpening(true);
-            track("VScode: contract opened", {
-              contract: contract.urlId,
-              contractId: contract._id,
+            track("VScode: protocol opened", {
+              protocol: protocol.urlId,
+              protocolId: protocol._id,
             });
             vscode.postMessage({
               command: "open",
-              data: { urlId: contract.urlId, type: "contract" },
+              data: { urlId: protocol.urlId, type: "protocol" },
             });
             setTimeout(() => {
               setOpening(false);
@@ -36,7 +36,7 @@ export const ContractCard = ({ contract, vscode, track }) => {
               gap: "10px",
             }}
           >
-            {contract.displayName}
+            {protocol.displayName}
           </h6>
           <div
             style={{
@@ -49,10 +49,10 @@ export const ContractCard = ({ contract, vscode, track }) => {
           >
             <a
               onClick={(e) => {
-                track("VScode: open cookbook", { contract: contract.urlId });
+                track("VScode: open cookbook", { protocol: protocol.urlId });
                 e.stopPropagation();
               }}
-              href={`https://www.cookbook.dev/projects/${contract.project}`}
+              href={`https://www.cookbook.dev/protocols/${protocol.project}`}
               target="_blank"
               rel="noreferrer noopener"
               className="card-text"
@@ -66,10 +66,10 @@ export const ContractCard = ({ contract, vscode, track }) => {
                 width: "50%",
               }}
             >
-              {contract.displayImage && (
-                <img src={contract.displayImage} width={15} height={15} style={{ borderRadius: "10px" }} />
+              {protocol.displayImage && (
+                <img src={protocol.displayImage} width={15} height={15} style={{ borderRadius: "10px" }} />
               )}
-              <Truncate>{contract.project}</Truncate>
+              <Truncate>{protocol.displayName}</Truncate>
             </a>
             <Stars>
               <svg
@@ -82,12 +82,12 @@ export const ContractCard = ({ contract, vscode, track }) => {
               >
                 <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 "></path>
               </svg>
-              {contract.total || 0}
+              {protocol.total || 0}
             </Stars>
           </div>
 
           <p className="card-text " style={{ marginTop: "10px", opacity: 0.8 }}>
-            {contract.description}
+            {protocol.description}
           </p>
         </div>
         <div
@@ -99,15 +99,15 @@ export const ContractCard = ({ contract, vscode, track }) => {
         >
           <DocLink
             onClick={(e) => {
-              track("VScode: open cookbook", { contract: contract.urlId });
+              track("VScode: open cookbook", { protocol: protocol.urlId });
             }}
-            href={`https://www.cookbook.dev/contracts/${contract.urlId}?utm=vscode`}
+            href={`https://www.cookbook.dev/protocols/${protocol.urlId}?utm=vscode`}
             target="_blank"
             rel="noreferrer noopener"
           >
             View Docs and Stats
           </DocLink>
-          {contract.audits.length ? (
+          {protocol.audits.length ? (
             <div
               className="card-text "
               style={{

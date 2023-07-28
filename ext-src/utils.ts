@@ -3,7 +3,8 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
-axios.defaults.baseURL = "https://simple-web3-api.herokuapp.com";
+axios.defaults.baseURL = "http://localhost:5001";
+// axios.defaults.baseURL = "https://simple-web3-api.herokuapp.com";
 
 export const getFilename = (path: string) => {
   const parts = path.split(/[\\/]/);
@@ -20,7 +21,7 @@ export const track = (metric: string, data: any, userID: string) => {
       platform: "vscode",
       userID,
       ...data,
-    },
+    }
   });
 };
 
@@ -33,15 +34,24 @@ export function genHexString(len: number) {
   return output;
 }
 
-const getContractInfo = async (contractAddress: string) => {
+const getContractInfo = async (contractUrlId: string, type: string) => {
   let options = {
     headers: {
       "vscode-plugin": "true",
     },
   }
-  const res = await axios.get(
-    `https://simple-web3-api.herokuapp.com/cli/id/${contractAddress}`, options
-  );
+  let res
+  if (type === "contract") {
+    res = await axios.get(
+      `/contracts/contract-gist/${contractUrlId}`, options
+    );
+  }
+  else {
+    res = await axios.get(
+      `/protocols/protocol-gist/${contractUrlId}`, options
+    );
+  }
+
 
   return res.data;
 };
@@ -87,7 +97,7 @@ const updateImports = (contract: any, isMain: any) => {
   return contract;
 };
 
-const saveContracts = async (contractAddress: string, mainFilename: string, files: any) => {
+const saveContracts = async (contractUrlId: string, mainFilename: string, files: any) => {
 
   const updatedFiles: any = {};
   const keys = Object.keys(files);
@@ -103,7 +113,7 @@ const saveContracts = async (contractAddress: string, mainFilename: string, file
     fs.mkdirSync(tempParentDirPath);
   }
   const tempDirPath = fs.mkdtempSync(path.join(tempParentDirPath, `contracts`));
-  const savePath = path.join(tempDirPath, `${contractAddress}`);
+  const savePath = path.join(tempDirPath, `${contractUrlId}`);
   const depsPath = path.join(savePath, `dependencies`)
   if (!fs.existsSync(tempDirPath)) {
     fs.mkdirSync(tempDirPath);
@@ -114,7 +124,7 @@ const saveContracts = async (contractAddress: string, mainFilename: string, file
   if (!fs.existsSync(depsPath)) {
     fs.mkdirSync(depsPath);
   }
-  vscode.window.showInformationMessage(`Cookbook.dev: opening ${contractAddress} in preview`);
+  vscode.window.showInformationMessage(`Cookbook.dev: opening ${contractUrlId} in preview`);
 
   for (const filename of keys) {
     let saveFilePath = "";
@@ -143,11 +153,11 @@ const saveContracts = async (contractAddress: string, mainFilename: string, file
   return
 };
 
-export async function getFiles(contractAddress: string) {
-  const { gistId, mainContract } = await getContractInfo(contractAddress); // 2nd param tell api request comes from plugin
+export async function getFiles(urlId: string, type: string) {
+  const { gistId, mainContract } = await getContractInfo(urlId, type); // 2nd param tell api request comes from plugin
   const files = await retrieveGistFiles(gistId);
   saveContracts(
-    contractAddress,
+    urlId,
     getFilenameForInstall(mainContract),
     files
   );
