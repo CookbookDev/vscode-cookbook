@@ -1,6 +1,7 @@
 import axios from "axios";
 import { DeviceUUID } from "device-uuid";
 import React, { useEffect, useState } from "react";
+import styled from 'styled-components'
 import { ContractCard } from "./ContractCard";
 import { ProtocolCard } from "./ProtocolCard";
 import Discord from "./discord-mark-white.png";
@@ -45,6 +46,8 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [contracts, setContracts] = useState([]);
   const [protocols, setProtocols] = useState([])
+  const [displayType, setDisplayType] = useState("contracts")
+
 
   useEffect(() => {
     const debounceSearch = setTimeout(async () => {
@@ -136,11 +139,23 @@ export default function App() {
           value={search}
         />
       </div>
+      <div style={{ display: "flex", marginBottom: "5px", gap: "10px" }}>
+        <TagItem checked={displayType === "contracts"} onClick={() => setDisplayType("contracts")} type="submit" style={{ fontSize: "10px", padding: '2px' }}>
+          <span id="inputGroup-sizing-default" style={{ fontSize: "10px" }}>
+            Contracts
+          </span>
+        </TagItem>
+        <TagItem checked={displayType === "protocols"} onClick={() => setDisplayType("protocols")} type="submit" style={{ fontSize: "10px", padding: "2px" }}>
+          <span id="inputGroup-sizing-default" style={{ fontSize: "10px" }}>
+            Protocols
+          </span>
+        </TagItem>
+      </div>
       {loading ? (
         <div className="card-text">Searching...</div>
       ) : Boolean(contracts.length) ? (
         <>
-          {protocols.map((protocol) => (
+          {displayType === "protocols" && protocols.map((protocol) => (
             <ProtocolCard
               key={protocol.urlId}
               protocol={protocol}
@@ -148,7 +163,7 @@ export default function App() {
               track={track}
             />
           ))}
-          {contracts.map((contract) => (
+          {displayType === "contracts" && contracts.map((contract) => (
             <ContractCard
               key={contract.urlId}
               contract={contract}
@@ -158,8 +173,29 @@ export default function App() {
           ))}
         </>
       ) : (
-      <div>No contracts found</div>
+        <div>No contracts found</div>
       )}
     </div>
   );
 }
+
+const TagItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  cursor: pointer;
+  text-align: center;
+  opacity: .6;
+  gap: 5px;
+  border-radius: 3px;
+  ${(props) =>
+    props.checked &&
+    `
+    text-decoration: underline;
+  `}
+  &:hover {
+    opacity: 1;
+  }
+`;
