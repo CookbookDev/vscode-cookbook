@@ -153,7 +153,7 @@ export default function App() {
       </div>
       {loading ? (
         <div className="card-text">Searching...</div>
-      ) : Boolean(contracts.length) ? (
+      ) : Boolean(contracts.length) || Boolean(protocols.length) ? (
         <>
           {displayType === "protocols" && protocols.map((protocol) => (
             <ProtocolCard
