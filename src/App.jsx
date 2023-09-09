@@ -5,10 +5,11 @@ import styled from 'styled-components'
 import { ContractCard } from "./ContractCard";
 import { ProtocolCard } from "./ProtocolCard";
 import Discord from "./discord-mark-white.png";
+import ChefGPT from './ChefGPT'
 
-axios.defaults.baseURL = "http://localhost:5001";
+// axios.defaults.baseURL = "http://localhost:5001";
 
-// axios.defaults.baseURL = "https://simple-web3-api.herokuapp.com";
+axios.defaults.baseURL = "https://simple-web3-api.herokuapp.com";
 
 const vscode = acquireVsCodeApi();
 
@@ -47,6 +48,7 @@ export default function App() {
   const [contracts, setContracts] = useState([]);
   const [protocols, setProtocols] = useState([])
   const [displayType, setDisplayType] = useState("contracts")
+  const [isRichard, setIsRichard] = useState(false);
 
 
   useEffect(() => {
@@ -76,7 +78,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="p-3">
+    <div className="p-3" style={{width: "100%"}}>
       <div
         style={{
           display: "flex",
@@ -114,67 +116,75 @@ export default function App() {
             Cookbook.dev
           </div>
         </a>
-        <a
-          href="https://discord.gg/WzsfPcfHrk"
-          target="_blank"
-          rel="noreferrer noopener"
-          style={{ display: "flex", gap: "5px", marginBottom: "10px" }}
-          onClick={() => {
-            track("VScode: Discord Opened", {});
-          }}
+        <div
+          onClick={() => setIsRichard(!isRichard)}
+          type="submit"
+          class="input-group-prepend"
+          style={{ fontSize: "12px" }}
         >
-          <img src={Discord} width={16} height={12} />
-        </a>
+          <span
+            class="input-group-text"
+            id="inputGroup-sizing-default"
+            style={{ fontSize: "12px" }}
+          >
+            {isRichard ? "Search" : "ChefGPT"}
+          </span>
+        </div>
       </div>
+      <div style={isRichard ? { display: "block" } : { display: "none" }}>
+        <ChefGPT vscode={vscode} />
+      </div>
+      <div style={isRichard ? { display: "none" } : { display: "block" }}>
 
-      <div class="input-group input-group-sm mb-3 p-0">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search for contracts"
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setLoading(true);
-          }}
-          value={search}
-        />
+        <div class="input-group input-group-sm mb-3 p-0" >
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search for contracts"
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setLoading(true);
+            }}
+            value={search}
+          />
+        </div>
+        <div style={{ display: "flex", marginBottom: "5px", gap: "10px" }}>
+          <TagItem checked={displayType === "contracts"} onClick={() => setDisplayType("contracts")} type="submit" style={{ fontSize: "10px", padding: '2px' }}>
+            <span id="inputGroup-sizing-default" style={{ fontSize: "10px" }}>
+              Contracts
+            </span>
+          </TagItem>
+          <TagItem checked={displayType === "protocols"} onClick={() => setDisplayType("protocols")} type="submit" style={{ fontSize: "10px", padding: "2px" }}>
+            <span id="inputGroup-sizing-default" style={{ fontSize: "10px" }}>
+              Protocols
+            </span>
+          </TagItem>
+        </div>
+        {loading ? (
+          <div className="card-text">Searching...</div>
+        ) : Boolean(contracts.length) || Boolean(protocols.length) ? (
+          <>
+            {displayType === "protocols" && protocols.map((protocol) => (
+              <ProtocolCard
+                key={protocol.urlId}
+                protocol={protocol}
+                vscode={vscode}
+                track={track}
+              />
+            ))}
+            {displayType === "contracts" && contracts.map((contract) => (
+              <ContractCard
+                key={contract.urlId}
+                contract={contract}
+                vscode={vscode}
+                track={track}
+              />
+            ))}
+          </>
+        ) : (
+          <div>No contracts found</div>
+        )}
       </div>
-      <div style={{ display: "flex", marginBottom: "5px", gap: "10px" }}>
-        <TagItem checked={displayType === "contracts"} onClick={() => setDisplayType("contracts")} type="submit" style={{ fontSize: "10px", padding: '2px' }}>
-          <span id="inputGroup-sizing-default" style={{ fontSize: "10px" }}>
-            Contracts
-          </span>
-        </TagItem>
-        <TagItem checked={displayType === "protocols"} onClick={() => setDisplayType("protocols")} type="submit" style={{ fontSize: "10px", padding: "2px" }}>
-          <span id="inputGroup-sizing-default" style={{ fontSize: "10px" }}>
-            Protocols
-          </span>
-        </TagItem>
-      </div>
-      {loading ? (
-        <div className="card-text">Searching...</div>
-      ) : Boolean(contracts.length) || Boolean(protocols.length) ? (
-        <>
-          {displayType === "protocols" && protocols.map((protocol) => (
-            <ProtocolCard
-              key={protocol.urlId}
-              protocol={protocol}
-              vscode={vscode}
-              track={track}
-            />
-          ))}
-          {displayType === "contracts" && contracts.map((contract) => (
-            <ContractCard
-              key={contract.urlId}
-              contract={contract}
-              vscode={vscode}
-              track={track}
-            />
-          ))}
-        </>
-      ) : (
-        <div>No contracts found</div>
-      )}
     </div>
   );
 }

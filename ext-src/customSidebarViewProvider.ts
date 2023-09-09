@@ -5,7 +5,7 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
 
   public _view?: vscode.WebviewView;
 
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+  constructor(private readonly _extensionUri: vscode.Uri) { }
 
   resolveWebviewView(
     webviewView: vscode.WebviewView,
@@ -20,6 +20,23 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._extensionUri],
     };
     webviewView.webview.html = this.getHtmlContent(webviewView.webview);
+
+
+    const getFiles = () => {
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        const document = editor.document;
+        let filePath = document.uri.fsPath;
+        let fileContent = document.getText();
+        let file = { filePath, fileContent };
+        webviewView.webview.postMessage({
+          command: 'updateFiles',
+          files: null,
+          openFiles: file
+        });
+      }
+    }
+
     webviewView.webview.onDidReceiveMessage((message) => {
       switch (message.command) {
         case "open":
@@ -32,10 +49,14 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
           return;
         case "alert":
           vscode.window.showErrorMessage(message.text);
+        case "getFiles":
+          getFiles()
           return;
       }
     });
   }
+
+
 
   private getHtmlContent(webview: vscode.Webview): string {
     const manifest = require("../build/asset-manifest.json");
@@ -67,8 +88,11 @@ export class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
 				<title>React App</title>
 				<link rel="stylesheet" type="text/css" href="${styleUri}">
         <base href="${webview.asWebviewUri(
-          vscode.Uri.joinPath(this._extensionUri, "build", "index.html")
-        )}/">
+      vscode.Uri.joinPath(this._extensionUri, "build", "index.html")
+    )}/">
+    <base href="${webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "build", "index.html")
+    )}/">
         </head>
 
 			<body>
